@@ -1,0 +1,2 @@
+TIME_RECORDER = {}
+GLOBAL_STACK = []

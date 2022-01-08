@@ -1,4 +1,4 @@
-from analyzer.globals import TIME_RECORDER
+from globals import TIME_RECORDER
 
 
 def explain_performance_by_name():

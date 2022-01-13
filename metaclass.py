@@ -1,4 +1,4 @@
-from decorator import cumulate_time
+from .decorator import cumulate_time
 
 
 class TimeAnalyzer(type):

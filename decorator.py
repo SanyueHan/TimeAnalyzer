@@ -1,6 +1,6 @@
 import time
 
-from globals import GLOBAL_STACK, TIME_RECORDER
+from .globals import GLOBAL_STACK, TIME_RECORDER
 
 
 def cumulate_time(fun):

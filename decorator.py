@@ -1,4 +1,5 @@
 import time
+import functools
 
 from .config import DIAGNOSE_TIME
 from .globals import GLOBAL_STACK, TIME_RECORDER
@@ -6,6 +7,7 @@ from .globals import GLOBAL_STACK, TIME_RECORDER
 
 def cumulate_time(fun):
     if DIAGNOSE_TIME:
+        @functools.wraps(fun)
         def fun_with_time(*args, **kw):
             key = fun.__qualname__
             GLOBAL_STACK.append(key)

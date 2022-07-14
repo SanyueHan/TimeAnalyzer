@@ -1,29 +1,16 @@
-import time
 import functools
 
 from .config import DIAGNOSE_TIME
-from .globals import GLOBAL_STACK, TIME_RECORDER
+from .timer import Timer
 
 
 def cumulate_time(fun):
     if DIAGNOSE_TIME:
         @functools.wraps(fun)
-        def fun_with_time(*args, **kw):
-            key = fun.__qualname__
-            GLOBAL_STACK.append(key)
-            ts = time.time()
-            result = fun(*args, **kw)
-            te = time.time()
-            GLOBAL_STACK.pop()
-            delta = (te - ts) * 1000
-            TIME_RECORDER[key] += delta
+        def fun_timed(*args, **kw):
+            with Timer(fun.__qualname__):
+                return fun(*args, **kw)
 
-            # remove this time from the parent function
-            if GLOBAL_STACK:
-                key = GLOBAL_STACK[-1]
-                TIME_RECORDER[key] -= delta
-            return result
-
-        return fun_with_time
+        return fun_timed
     else:
         return fun

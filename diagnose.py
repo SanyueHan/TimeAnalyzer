@@ -1,16 +1,16 @@
-from .globals import TIME_RECORDER
+from .timer import Timer
 
 
 def explain_performance_by_name():
-    print(f"Total Time: {sum(TIME_RECORDER.values())}")
-    for t, n in sorted([(t, n) for n, t in TIME_RECORDER.items()], reverse=True):
+    print(f"Total Time: {sum(Timer.recorder.values())}")
+    for t, n in sorted([(t, n) for n, t in Timer.recorder.items()], reverse=True):
         print(f"{t:10.2f}ms    {n}")
 
 
 def explain_performance_by_class():
     print("Divided by Class: ")
     classes = {}
-    for n, t in TIME_RECORDER.items():
+    for n, t in Timer.recorder.items():
         if '.' in n:
             class_name, method_name = n.split('.')
             if class_name in classes:

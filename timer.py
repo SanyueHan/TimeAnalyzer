@@ -25,9 +25,9 @@ class Timer:
 
     @classmethod
     def explain_performance_by_name(cls):
-        print(f"Total Time: {sum(cls.recorder.values())}")
+        print(f"Total Time: {sum(cls.recorder.values())}s")
         for t, n in sorted([(t, n) for n, t in cls.recorder.items()], reverse=True):
-            print(f"{t:10.2f}ms    {n}")
+            print(f"{t:10.2f}s    {n}")
 
     @classmethod
     def explain_performance_by_class(cls):
@@ -44,6 +44,6 @@ class Timer:
         for cls_method_dict in classes.values():
             cls_method_dict['total'] = sum(cls_method_dict.values())
         for cls_ in sorted(classes.keys(), key=lambda i: classes[i]['total'], reverse=True):
-            print(f"{cls_}    {classes[cls_].pop('total')}ms")
+            print(f"{cls_}    {classes[cls_].pop('total')}s")
             for t, n in sorted([(t, n) for n, t in classes[cls_].items()], reverse=True):
-                print(f"    {t:10.2f}ms    {n}")
+                print(f"    {t:10.2f}s    {n}")

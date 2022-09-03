@@ -27,11 +27,12 @@ class Timer:
 
     @classmethod
     def explain_performance_by_name(cls):
-        print(f"Overall Time: {sum(cls.time_recorder.values())}ns")
-        data = [("name", "total time(ns)", "count")]
-        for n in sorted(cls.time_recorder.keys(), key=cls.time_recorder.get, reverse=True):
-            data.append((n, f"{cls.time_recorder[n]}", f"{cls.count_recorder[n]}"))
-        cls.__display_table(data, ('<', '>', '>'))
+        total = sum(cls.time_recorder.values())
+        print(f"Overall Time: {total}ns")
+        data = [("name", "sum(ns)", "count", "proportion")]
+        for name in sorted(cls.time_recorder.keys(), key=cls.time_recorder.get, reverse=True):
+            data.append((name, f"{cls.time_recorder[name]}", f"{cls.count_recorder[name]}", f"{cls.time_recorder[name]*100/total:.2f}%"))
+        cls.__display_table(data, ('<', '>', '>', '>'))
 
     @staticmethod
     def __display_table(data, fmt, sep='    '):

@@ -1,10 +1,10 @@
 from collections import defaultdict
-from time import time
+from time import time_ns
 
 
 class Timer:
     stack = []
-    time_recorder = defaultdict(float)
+    time_recorder = defaultdict(int)
     count_recorder = defaultdict(int)
 
     def __init__(self, qualname):
@@ -14,10 +14,10 @@ class Timer:
     def __enter__(self):
         self.stack.append(self._qualname)
         self.count_recorder[self._qualname] += 1
-        self._start = time()
+        self._start = time_ns()
 
     def __exit__(self, exc_type, exc_value, traceback):
-        delta = time() - self._start
+        delta = time_ns() - self._start
         self.stack.pop()
 
         self.time_recorder[self._qualname] += delta
@@ -27,10 +27,10 @@ class Timer:
 
     @classmethod
     def explain_performance_by_name(cls):
-        print(f"Overall Time: {sum(cls.time_recorder.values())}s")
-        data = [("name", "total time(s)", "count")]
+        print(f"Overall Time: {sum(cls.time_recorder.values())}ns")
+        data = [("name", "total time(ns)", "count")]
         for n in sorted(cls.time_recorder.keys(), key=cls.time_recorder.get, reverse=True):
-            data.append((n, f"{cls.time_recorder[n]:.2f}", f"{cls.count_recorder[n]}"))
+            data.append((n, f"{cls.time_recorder[n]}", f"{cls.count_recorder[n]}"))
         cls.__display_table(data, ('<', '>', '>'))
 
     @classmethod
@@ -48,9 +48,9 @@ class Timer:
         for cls_method_dict in classes.values():
             cls_method_dict['total'] = sum(cls_method_dict.values())
         for cls_ in sorted(classes.keys(), key=lambda i: classes[i]['total'], reverse=True):
-            print(f"{cls_}    {classes[cls_].pop('total')}s")
+            print(f"{cls_}    {classes[cls_].pop('total')}ns")
             for t, n in sorted([(t, n) for n, t in classes[cls_].items()], reverse=True):
-                print(f"    {t:10.2f}s    {n}")
+                print(f"    {t}ns    {n}")
 
     @staticmethod
     def __display_table(data, fmt, sep='    '):

@@ -33,25 +33,6 @@ class Timer:
             data.append((n, f"{cls.time_recorder[n]}", f"{cls.count_recorder[n]}"))
         cls.__display_table(data, ('<', '>', '>'))
 
-    @classmethod
-    def explain_performance_by_class(cls):
-        print("Divided by Class: ")
-        classes = {}
-        for n, t in cls.time_recorder.items():
-            if '.' in n:
-                class_name, method_name = n.split('.')
-                if class_name in classes:
-                    classes[class_name][method_name] = t
-                else:
-                    classes[class_name] = {method_name: t}
-            # todo: normal functions
-        for cls_method_dict in classes.values():
-            cls_method_dict['total'] = sum(cls_method_dict.values())
-        for cls_ in sorted(classes.keys(), key=lambda i: classes[i]['total'], reverse=True):
-            print(f"{cls_}    {classes[cls_].pop('total')}ns")
-            for t, n in sorted([(t, n) for n, t in classes[cls_].items()], reverse=True):
-                print(f"    {t}ns    {n}")
-
     @staticmethod
     def __display_table(data, fmt, sep='    '):
         n = len(fmt)

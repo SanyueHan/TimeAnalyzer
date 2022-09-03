@@ -1,11 +1,13 @@
 from collections import defaultdict
 from time import time_ns
 
+from .unit import TimeUnit
+
 
 class Timer:
     stack = []
-    time_recorder = defaultdict(int)
-    count_recorder = defaultdict(int)
+    timer = defaultdict(int)
+    counter = defaultdict(int)
 
     def __init__(self, qualname):
         self._qualname = qualname
@@ -13,25 +15,25 @@ class Timer:
 
     def __enter__(self):
         self.stack.append(self._qualname)
-        self.count_recorder[self._qualname] += 1
+        self.counter[self._qualname] += 1
         self._start = time_ns()
 
     def __exit__(self, exc_type, exc_value, traceback):
         delta = time_ns() - self._start
         self.stack.pop()
 
-        self.time_recorder[self._qualname] += delta
+        self.timer[self._qualname] += delta
         if self.stack:
             caller_name = self.stack[-1]
-            self.time_recorder[caller_name] -= delta
+            self.timer[caller_name] -= delta
 
     @classmethod
-    def explain_performance_by_name(cls):
-        total = sum(cls.time_recorder.values())
-        print(f"Overall Time: {total}ns")
-        data = [("name", "sum(ns)", "count", "proportion")]
-        for name in sorted(cls.time_recorder.keys(), key=cls.time_recorder.get, reverse=True):
-            data.append((name, f"{cls.time_recorder[name]}", f"{cls.count_recorder[name]}", f"{cls.time_recorder[name]*100/total:.2f}%"))
+    def explain_performance_by_name(cls, unit: TimeUnit = TimeUnit.S, precision: int = 2):
+        total = sum(cls.timer.values())
+        print(f"Overall Time: {unit.from_ns(total):.{precision}f}{unit.name.lower()}")
+        data = [("name", f"sum({unit.name.lower()})", "count", "proportion")]
+        for name in sorted(cls.timer.keys(), key=cls.timer.get, reverse=True):
+            data.append((name, f"{unit.from_ns(cls.timer[name]):.{precision}f}", f"{cls.counter[name]}", f"{cls.timer[name] * 100 / total:.2f}%"))
         cls.__display_table(data, ('<', '>', '>', '>'))
 
     @staticmethod
